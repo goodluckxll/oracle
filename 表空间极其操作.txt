@@ -1,0 +1,20 @@
+查询临时表空间：
+select tablespace_name,file_name,bytes/1024/1024 file_size,autoextensible from dba_temp_files;
+
+查询默认临时表空间：
+select * from database_properties where property_name='DEFAULT_TEMP_TABLESPACE';
+
+
+-------------------------------------------------------------------------------------------------------
+
+扩展临时表空间：
+方法一、增大临时文件大小
+alter database tempfile 'D:/APP/ADMINISTRATOR/ORADATA/SQJZ/TEMP01.DBF' resize 100m;
+
+方法二：、将临时数据文件设置为自动扩展
+alter database tempfile 'D:/APP/ADMINISTRATOR/ORADATA/SQJZ/TEMP01.DBF' autoextend on next 5m maxsize unlimited;
+
+-------------------------------------------------------------------------------------------------------
+如果临时表空间的文件达到32G，只能再添加文件：
+
+ALTER TABLESPACE TEMP ADD TEMPFILE 'D:/APP/ADMINISTRATOR/ORADATA/SQJZ/TEMP02.DBF' SIZE 1024M AUTOEXTEND ON NEXT 1M  MAXSIZE UNLIMITED;

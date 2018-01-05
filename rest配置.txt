@@ -1,0 +1,16 @@
+	<!--设置mapper 针对不同的namespace 设置不同的mapper -->
+	<!--<constant name="struts.mapper.class" value="org.apache.struts2.dispatcher.mapper.Restful2ActionMapper" 
+		/> -->
+	
+
+	<!--<constant name="struts.enable.SlashesInActionNames" value="true"/> <!--<constant 
+		name="struts.rest.namespace" value="/rest"></constant> -->
+	<!--<package name="rest" namespace="/rest" extends="rest-default"></package> -->
+
+
+
+
+<constant name="struts.convention.package.locators" value="rest" />
+	<!--url 后缀设置 -->
+	<constant name="struts.action.extension" value="xhtml,,xml,json,action" />
+<!-- <constant name="struts.mapper.prefixMapping" value="/rest:rest,:struts"/> -->

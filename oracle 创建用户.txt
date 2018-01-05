@@ -1,0 +1,42 @@
+-- Create the user 
+create user sfb
+  identified by sfb
+  default tablespace USERS
+  temporary tablespace TEMP
+  profile DEFAULT;
+-- Grant/Revoke role privileges 
+grant dba to sfb;
+grant connect to sfb;
+grant resource to sfb;
+
+
+
+
+
+
+
+
+
+SELECT *         
+  FROM 表1 t1
+  JOIN (SELECT *,
+               ROW_NUMBER() OVER(PARTITION BY 单据ID ORDER BY 处理时间 DESC) rn
+         FROM 表2
+       ) t2
+    ON t1.单据ID = t2.单据ID
+   AND t2.rn = 1；
+   
+   
+   
+   
+   SELECT *         
+  FROM cc_sqjz_tfsj t1
+  JOIN (SELECT id as tsfj_dtxx_id,tfsj_id,dtxxms,sftmc as tsfj_dtxx_sftmc,sbrmc as tsfj_dtxx_sbrmc,sbsj as tsfj_dtxx_sbsj,tfsjdqzt,ROW_NUMBER() OVER(PARTITION BY tfsj_id ORDER BY sbsj DESC) rn FROM cc_sqjz_tfsj_dtxx) t2
+    ON t1.id = t2.tfsj_id AND t2.rn = 1 and tfsjdqzt='01'
+    join (select jzjgbm,sqjzrybh from cc_fxry_baseinfo ) t3
+    on t1.sqjzrybm=t3.sqjzrybh;
+	
+	
+	
+	
+	Aqua data studio---连接数据库工具

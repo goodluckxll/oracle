@@ -1,0 +1,16 @@
+create table exclude_table(tablename varchar2(100));
+
+insert into exclude_table values('cc_logs');
+insert into exclude_table values('cc_location_info');
+insert into exclude_table values('cc_location_info_bak');
+insert into exclude_table values('cc_fxry_tupian');
+insert into exclude_table values('CC_XMPP_DEVICE_STATUS');
+insert into exclude_table values('cc_xmpp_info');
+insert into exclude_table values('cc_xmpp_justice');
+insert into exclude_table values('CC_XMPP_LBS_REQ');
+insert into exclude_table values('cc_xmpp_log');
+insert into exclude_table values('CC_XMPP_MSG_CROSSBORDER');
+insert into exclude_table values('cc_xmpp_msg_disappear');
+insert into exclude_table values('cc_xmpp_msg_gather');
+insert into exclude_table values('cc_xmpp_msg_outrange');
+insert into exclude_table values('cc_xmpp_msg_wait');

@@ -1,0 +1,21 @@
+SELECT *  FROM 
+(
+SELECT A.*,ROW_NUMBER() OVER (PARTITION BY fxry_id ORDER BY wear_time desc) RN
+FROM cc_device_fxry A
+) 
+WHERE RN=1;
+
+
+
+
+
+
+
+
+
+旧：
+create or replace view view_cc_device_fxry_tj as
+select tt."ID",tt."DEVICE_NUMBER",tt."FXRY_ID",tt."STATUS",tt."WEAR_TIME",tt."CREATE_PERSION",tt."RELEASE_TIME",tt."USE_SFSUNIT",tt."USE_UNIT",tt."FXRY_NAME" from cc_device_fxry tt
+join (select fxry_id,max(wear_time) wear_time from cc_device_fxry group by fxry_id ) aa
+on tt.fxry_id = aa.fxry_id
+and tt.wear_time = aa.wear_time;

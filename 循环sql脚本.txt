@@ -1,0 +1,76 @@
+前置机启动
+
+通过spring-config.xml，初始化org.androidpn.server.xmpp.net.XmppIoHandler，在构造函数中，调用XmppServer.getInstance().getServerName()中，调用XmppServer的start（）方法，然后启动了前置机。开始负责监控5222端口和9999端口
+
+
+
+
+
+前置机与社区应用通信9999
+org.androidpn.client.xmpp.handler.XmppClientHandler
+
+sessionOpened()---创建connection
+
+sessionCreated()---将ioSession添加到XmppClient中
+
+sessionClosed（）--将ioSession从XmppClient中删除【同时要将ioSession关闭】
+
+sessionIdle（）---超过规定时间未收到心跳，将ioSession从XmppClient中删除【同时要将ioSession关闭】
+
+exceptionCaught()----如果是IOException，例如，client自己关闭，应该会调用sessionClosed（），【验证】将ioSession从XmppClient中删除【同时要将ioSession关闭】
+
+messageReceived（）XmppClient.getInstance().addClientHostToList(clientHost);【】
+
+
+关闭ioSession的几种条件：
+1.长时间没有收到client的心跳信息,触发	sessionIdle（）或者 KeepAliveRequestTimeoutHandler【】；
+2.由于程序异常，导致	exceptionCaught（）并且是IOException【】
+
+
+
+
+
+
+XmppClient
+
+DefineSession  ioSession、keyCount、keySet
+
+List<DefineSession> defineSessionList  ---排序，看哪个 ioSession上的设备最少
+
+Map<Long, DefineSession> ioSession_DefineSessionMap---根据，ioSessionID获取 ioSession、keySet、keyCount
+
+Map<String, Long> key_ioSessionMap----根据设备名称，获取 ioSessionID
+
+List<ClientHost> clientHostList-----存放不同应用，可以获取 hostName、ioSessionCount、ioSessionID
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+create or replace procedure pro_for is
+i number;
+begin
+i:=0;
+while i<5 loop
+i:=i+1;
+insert into d_bm values(sys_guid(),sys_guid());
+end loop;
+end pro_for;

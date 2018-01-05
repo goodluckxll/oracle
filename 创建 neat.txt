@@ -1,0 +1,28 @@
+mkdir neat
+
+1、登录linux，以oracle用户登录（如果是root用户登录的，登录后用 su - oracle命令切换成oracle用户）
+
+2、以sysdba方式来打开sqlplus，命令如下： sqlplus / as sysdba
+
+
+
+-删除表空间
+drop tablespace NEATDB_TEMP including CONTENTS and datafiles;
+
+drop tablespace NEATDB including CONTENTS and datafiles;
+
+
+
+--创建临时表空间 NEATDB_TEMP
+create temporary tablespace NEATDB_TEMP tempfile '\home\oracle\app\oracle\oradata\neat\NEATDB_TEMP.bdf' size 100m reuse autoextend on next 20m maxsize unlimited; 
+
+--创建用户表空间 NEATDB
+create tablespace NEATDB datafile '\home\oracle\app\oracle\oradata\neat\NEATDB.dbf' size 100M reuse autoextend on next 40M maxsize unlimited default storage(initial 128k next 128k minextents 2 maxextents unlimited); 
+
+--创建用户neat
+create user neat identified by neat default tablespace NEATDB temporary tablespace NEATDB_TEMP;
+
+--给用户neat 赋权限
+grant dba to neat;
+grant resource to neat;
+grant connect to neat;

@@ -1,0 +1,551 @@
+社区矫正表数据很大的表：
+truncate table CC_FXRY_TUPIAN;
+truncate table CC_LOCATION_INFO;
+truncate table CC_LOCATION_INFO_BUFFER;
+truncate table CC_ALARM_INFO;
+truncate table CC_LOGS;
+truncate table CC_XMPP_LOG;
+truncate table CC_XMPP_LBS_REQ;
+truncate table CC_XMPP_DEVICE_STATUS;
+truncate table CC_XMPP_MSG_CROSSBORDER
+
+
+
+
+
+
+
+
+
+
+
+
+impdp sqjz/sqjz@sqjzsc dumpfile=sqjz_171127_sc.dmp  
+exclude=TABLE:\"IN\(\'CC_FXRY_TUPIAN\'\)\"  
+exclude=TABLE:\"IN\(\'CC_LOCATION_INFO\'\)\"  
+exclude=TABLE:\"IN\(\'CC_LOCATION_INFO_BUFFER\'\)\"  
+exclude=TABLE:\"IN\(\'CC_ALARM_INFO\'\)\"  
+exclude=TABLE:\"IN\(\'CC_XMPP_LOG\'\)\"  
+exclude=TABLE:\"IN\(\'CC_XMPP_DEVICE_STATUS\'\)\"  
+exclude=TABLE:\"IN\(\'CC_LOGS\'\)\"
+exclude=TABLE:\"IN\(\'CC_XMPP_LBS_REQ\'\)\"
+exclude=TABLE:\"IN\(\'CC_XMPP_MSG_CROSSBORDER\'\)\"
+
+
+
+
+
+
+
+
+
+-- Create table
+create table CC_FXRY_TUPIAN
+(
+  id          VARCHAR2(32) not null,
+  face_pic    BLOB,
+  pic_status  VARCHAR2(2),
+  left_f1     BLOB,
+  left_f2     BLOB,
+  left_f3     BLOB,
+  left_f4     BLOB,
+  left_f5     BLOB,
+  right_f1    BLOB,
+  right_f2    BLOB,
+  right_f3    BLOB,
+  right_f4    BLOB,
+  right_f5    BLOB,
+  m_right_1   BLOB,
+  m_right_2   BLOB,
+  m_right_3   BLOB,
+  m_right_4   BLOB,
+  m_right_5   BLOB,
+  m_left_1    BLOB,
+  m_left_2    BLOB,
+  m_left_3    BLOB,
+  m_left_4    BLOB,
+  m_left_5    BLOB,
+  create_time VARCHAR2(20) default to_char(sysdate,'yyyy-mm-dd HH24:MI:SS')
+)
+tablespace USERS
+  pctfree 10
+  initrans 1
+  maxtrans 255
+  storage
+  (
+    initial 64K
+    next 1M
+    minextents 1
+    maxextents unlimited
+  );
+-- Create/Recreate primary, unique and foreign key constraints 
+alter table CC_FXRY_TUPIAN
+  add constraint FXRY_PIC primary key (ID)
+  using index 
+  tablespace USERS
+  pctfree 10
+  initrans 2
+  maxtrans 255
+  storage
+  (
+    initial 64K
+    next 1M
+    minextents 1
+    maxextents unlimited
+  );
+
+
+create table CC_LOCATION_INFO
+(
+  loc_id     VARCHAR2(32) not null,
+  loc_time   DATE,
+  longitude  NUMBER(17,9),
+  latitude   NUMBER(17,9),
+  address    VARCHAR2(32),
+  device_id  VARCHAR2(32),
+  fxry_id    VARCHAR2(32),
+  save_date  DATE default sysdate,
+  alarm_type VARCHAR2(32),
+  loc_type   VARCHAR2(30),
+  is_repeat  VARCHAR2(30),
+  sqjzrybh   VARCHAR2(32),
+  jzdw       VARCHAR2(32),
+  jzzt       VARCHAR2(32),
+  sfyj       VARCHAR2(32)
+)
+
+create table CC_LOCATION_INFO_BUFFER
+(
+  loc_id     VARCHAR2(32) not null,
+  loc_time   DATE,
+  longitude  NUMBER(17,9),
+  latitude   NUMBER(17,9),
+  address    VARCHAR2(32),
+  device_id  VARCHAR2(32),
+  fxry_id    VARCHAR2(32),
+  save_date  DATE default sysdate,
+  alarm_type VARCHAR2(32),
+  loc_type   VARCHAR2(30),
+  is_repeat  VARCHAR2(30),
+  sqjzrybh   VARCHAR2(32),
+  jzdw       VARCHAR2(32),
+  jzzt       VARCHAR2(32),
+  sfyj       VARCHAR2(32)
+)
+
+
+-- Create table
+create table CC_ALARM_INFO
+(
+  alarm_id     VARCHAR2(32) not null,
+  fxry_id      VARCHAR2(32),
+  alarm_time   DATE,
+  alarm_level  VARCHAR2(5),
+  alarm_type   VARCHAR2(10),
+  execute_unit VARCHAR2(32),
+  adjust_type  VARCHAR2(5),
+  isauto_alert NUMBER(38) default 2,
+  alert        VARCHAR2(500),
+  alarm        VARCHAR2(500),
+  handle_time  DATE,
+  handler      VARCHAR2(64),
+  record       VARCHAR2(400),
+  status       VARCHAR2(1),
+  save_date    DATE default sysdate,
+  x            FLOAT,
+  y            FLOAT,
+  event_id     VARCHAR2(32),
+  repair       VARCHAR2(1),
+  content      VARCHAR2(100)
+)
+tablespace USERS
+  pctfree 10
+  initrans 1
+  maxtrans 255
+  storage
+  (
+    initial 2M
+    next 1M
+    minextents 1
+    maxextents unlimited
+  );
+-- Add comments to the table 
+comment on table CC_ALARM_INFO
+  is '报警信息';
+-- Add comments to the columns 
+comment on column CC_ALARM_INFO.alarm_id
+  is '报警ID';
+comment on column CC_ALARM_INFO.fxry_id
+  is '人员ID';
+comment on column CC_ALARM_INFO.alarm_time
+  is '报警时间';
+comment on column CC_ALARM_INFO.alarm_level
+  is '报警级别';
+comment on column CC_ALARM_INFO.alarm_type
+  is '报警类型';
+comment on column CC_ALARM_INFO.execute_unit
+  is '执行机关';
+comment on column CC_ALARM_INFO.adjust_type
+  is '矫正类别';
+comment on column CC_ALARM_INFO.isauto_alert
+  is '是否自动提醒';
+comment on column CC_ALARM_INFO.alert
+  is '提醒内容';
+comment on column CC_ALARM_INFO.alarm
+  is '报警内容';
+comment on column CC_ALARM_INFO.handle_time
+  is '处理时间';
+comment on column CC_ALARM_INFO.handler
+  is '处理人/方式';
+comment on column CC_ALARM_INFO.record
+  is '记录内容';
+comment on column CC_ALARM_INFO.status
+  is '1.已处理（已完结）;2.未处理（持续中）';
+comment on column CC_ALARM_INFO.x
+  is 'x坐标';
+comment on column CC_ALARM_INFO.y
+  is 'y坐标';
+comment on column CC_ALARM_INFO.event_id
+  is '报警事件ID';
+comment on column CC_ALARM_INFO.repair
+  is '是否被修复（定位修复越界和设备不在线） null，未修复；1，修复';
+comment on column CC_ALARM_INFO.content
+  is '备注内容';
+-- Create/Recreate indexes 
+create index ALARM_EVENT_ID on CC_ALARM_INFO (EVENT_ID)
+  tablespace USERS
+  pctfree 10
+  initrans 2
+  maxtrans 255
+  storage
+  (
+    initial 960K
+    next 1M
+    minextents 1
+    maxextents unlimited
+  );
+create index FXRY_ID_STATUS on CC_ALARM_INFO (STATUS)
+  tablespace USERS
+  pctfree 10
+  initrans 2
+  maxtrans 255
+  storage
+  (
+    initial 960K
+    next 1M
+    minextents 1
+    maxextents unlimited
+  );
+create index FXRY_STATUS_ID on CC_ALARM_INFO (STATUS, FXRY_ID)
+  tablespace USERS
+  pctfree 10
+  initrans 2
+  maxtrans 255
+  storage
+  (
+    initial 16K
+    next 1M
+    minextents 1
+    maxextents unlimited
+  );
+create index PERSON_ALARM_FK on CC_ALARM_INFO (FXRY_ID)
+  tablespace USERS
+  pctfree 10
+  initrans 2
+  maxtrans 255
+  storage
+  (
+    initial 960K
+    next 1M
+    minextents 1
+    maxextents unlimited
+  );
+-- Create/Recreate primary, unique and foreign key constraints 
+alter table CC_ALARM_INFO
+  add constraint PK_CC_ALARM_INFO primary key (ALARM_ID)
+  using index 
+  tablespace USERS
+  pctfree 10
+  initrans 2
+  maxtrans 255
+  storage
+  (
+    initial 2M
+    next 1M
+    minextents 1
+    maxextents unlimited
+  );
+  
+  
+  -- Create table
+create table CC_XMPP_LOG
+(
+  id            VARCHAR2(32) not null,
+  device_number VARCHAR2(32),
+  msg_type      VARCHAR2(32),
+  msg_time      TIMESTAMP(6),
+  type          VARCHAR2(32),
+  msg_id        VARCHAR2(60),
+  message       VARCHAR2(2000)
+)
+tablespace USERS
+  pctfree 10
+  initrans 1
+  maxtrans 255
+  storage
+  (
+    initial 64K
+    next 1M
+    minextents 1
+    maxextents unlimited
+  );
+-- Add comments to the columns 
+comment on column CC_XMPP_LOG.id
+  is '主键';
+comment on column CC_XMPP_LOG.device_number
+  is '设备编号';
+comment on column CC_XMPP_LOG.msg_type
+  is '消息类型(set,get,error)';
+comment on column CC_XMPP_LOG.msg_time
+  is '消息时间';
+comment on column CC_XMPP_LOG.type
+  is '协议类型(loc,alert)';
+comment on column CC_XMPP_LOG.msg_id
+  is '消息ID';
+-- Create/Recreate indexes 
+create index DN_CC_XMPP_LOG on CC_XMPP_LOG (DEVICE_NUMBER)
+  tablespace USERS
+  pctfree 10
+  initrans 2
+  maxtrans 255
+  storage
+  (
+    initial 64K
+    next 1M
+    minextents 1
+    maxextents unlimited
+  );
+create index MT_CC_XMPP_LOG on CC_XMPP_LOG (MSG_TIME)
+  tablespace USERS
+  pctfree 10
+  initrans 2
+  maxtrans 255
+  storage
+  (
+    initial 64K
+    next 1M
+    minextents 1
+    maxextents unlimited
+  );
+-- Create/Recreate primary, unique and foreign key constraints 
+alter table CC_XMPP_LOG
+  add constraint PRIMARY_CC_XMPP_LOG primary key (ID)
+  using index 
+  tablespace USERS
+  pctfree 10
+  initrans 2
+  maxtrans 255
+  storage
+  (
+    initial 64K
+    next 1M
+    minextents 1
+    maxextents unlimited
+  );
+  
+  
+  -- Create table
+create table CC_XMPP_DEVICE_STATUS
+(
+  id            VARCHAR2(32) not null,
+  fxry_id       VARCHAR2(32),
+  device_id     VARCHAR2(32),
+  device_number VARCHAR2(32),
+  power         VARCHAR2(32),
+  silent_state  VARCHAR2(30),
+  close_state   VARCHAR2(30),
+  receive_time  DATE,
+  save_time     DATE default sysdate
+)
+tablespace USERS
+  pctfree 10
+  initrans 1
+  maxtrans 255
+  storage
+  (
+    initial 64K
+    next 1M
+    minextents 1
+    maxextents unlimited
+  );
+-- Create/Recreate primary, unique and foreign key constraints 
+alter table CC_XMPP_DEVICE_STATUS
+  add constraint CC_XMPP_DEVICE_STATUS_ID primary key (ID)
+  using index 
+  tablespace USERS
+  pctfree 10
+  initrans 2
+  maxtrans 255
+  storage
+  (
+    initial 64K
+    next 1M
+    minextents 1
+    maxextents unlimited
+  );
+  
+  
+  
+  -- Create table
+create table CC_LOGS
+(
+  id    FLOAT not null,
+  yhm   VARCHAR2(4000),
+  mkm   VARCHAR2(4000),
+  rzlx  NUMBER(10),
+  czsj  DATE,
+  orgid VARCHAR2(32)
+)
+tablespace USERS
+  pctfree 10
+  initrans 1
+  maxtrans 255
+  storage
+  (
+    initial 3M
+    next 1M
+    minextents 1
+    maxextents unlimited
+  );
+-- Create/Recreate primary, unique and foreign key constraints 
+alter table CC_LOGS
+  add constraint CC_LOGS_PK primary key (ID)
+  using index 
+  tablespace USERS
+  pctfree 10
+  initrans 2
+  maxtrans 255
+  storage
+  (
+    initial 576K
+    next 1M
+    minextents 1
+    maxextents unlimited
+  );
+  
+  
+  -- Create table
+create table CC_XMPP_LBS_REQ
+(
+  id            VARCHAR2(32) not null,
+  device_number VARCHAR2(32),
+  loc_time      DATE,
+  req_time      DATE,
+  req_seq       NUMBER,
+  res_time      DATE,
+  res_content   VARCHAR2(500)
+)
+tablespace USERS
+  pctfree 10
+  initrans 1
+  maxtrans 255
+  storage
+  (
+    initial 64K
+    next 1M
+    minextents 1
+    maxextents unlimited
+  );
+-- Add comments to the table 
+comment on table CC_XMPP_LBS_REQ
+  is 'LBS定位请求';
+-- Add comments to the columns 
+comment on column CC_XMPP_LBS_REQ.device_number
+  is '设备编号';
+-- Create/Recreate indexes 
+create index DEVICEID_RESTIME on CC_XMPP_LBS_REQ (DEVICE_NUMBER, REQ_TIME)
+  tablespace USERS
+  pctfree 10
+  initrans 2
+  maxtrans 255
+  storage
+  (
+    initial 64K
+    next 1M
+    minextents 1
+    maxextents unlimited
+  );
+-- Create/Recreate primary, unique and foreign key constraints 
+alter table CC_XMPP_LBS_REQ
+  add constraint PRIMARY_CC_XMPP_LBS_REQ primary key (ID)
+  using index 
+  tablespace USERS
+  pctfree 10
+  initrans 2
+  maxtrans 255
+  storage
+  (
+    initial 64K
+    next 1M
+    minextents 1
+    maxextents unlimited
+  );
+
+  
+  -- Create table
+create table CC_XMPP_MSG_CROSSBORDER
+(
+  id        VARCHAR2(32) not null,
+  fxry_id   VARCHAR2(32),
+  time      DATE,
+  longitude NUMBER(14,6),
+  latitude  NUMBER(14,6),
+  iscross   VARCHAR2(30)
+)
+tablespace USERS
+  pctfree 10
+  initrans 1
+  maxtrans 255
+  storage
+  (
+    initial 64K
+    next 1M
+    minextents 1
+    maxextents unlimited
+  );
+-- Add comments to the table 
+comment on table CC_XMPP_MSG_CROSSBORDER
+  is '越界记录表';
+-- Add comments to the columns 
+comment on column CC_XMPP_MSG_CROSSBORDER.id
+  is 'ID';
+comment on column CC_XMPP_MSG_CROSSBORDER.fxry_id
+  is '人员ID';
+comment on column CC_XMPP_MSG_CROSSBORDER.time
+  is '记录时间';
+comment on column CC_XMPP_MSG_CROSSBORDER.longitude
+  is '经度';
+comment on column CC_XMPP_MSG_CROSSBORDER.latitude
+  is '纬度';
+comment on column CC_XMPP_MSG_CROSSBORDER.iscross
+  is '是否越界';
+-- Create/Recreate primary, unique and foreign key constraints 
+alter table CC_XMPP_MSG_CROSSBORDER
+  add constraint PRIM_CC_XMPP_MSG_CROSSB primary key (ID)
+  using index 
+  tablespace USERS
+  pctfree 10
+  initrans 2
+  maxtrans 255
+  storage
+  (
+    initial 64K
+    next 1M
+    minextents 1
+    maxextents unlimited
+  );
+
+
+
+
+

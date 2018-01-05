@@ -1,0 +1,11 @@
+sysdba登录 
+1.查看密码有效期
+
+select * from dba_profiles s where s.profile='DEFAULT' and resource_name='PASSWORD_LIFE_TIME';
+
+2.将密码设置成永不过期
+
+alter PROFILE DEFAULT LIMIT PASSWORD_LIFE_TIME UNLIMITED;
+
+3.修改用户密码
+alert user 【用户名】 identified by 【密码】

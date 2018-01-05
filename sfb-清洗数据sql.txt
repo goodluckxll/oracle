@@ -1,0 +1,134 @@
+update CC_DCPGXX t set t.bgrxm=(dbms_random.string('a', 5) );
+update CC_DCPGXX t set t.bgrsfzh=( dbms_random.string('x', 18) );
+update CC_DCPGXX t set t.bdcrxm=(dbms_random.string('a', 5) );
+update CC_DCPGXX t set t.dcsx=(dbms_random.string('a', 5) );
+update CC_DCPGXX t set t.dcdd=( dbms_random.string('a', 5) );
+update CC_DCPGXX t set t.dcr=( dbms_random.string('a', 5) );
+update CC_DCPGXX t set t.dcyjshr=( dbms_random.string('a', 5) );
+update CC_DCPGXX t set t.wtbh='1234';
+update CC_DCPGXX t set t.bgrjzddz=dbms_random.string('x', 40);
+update CC_DCPGXX t set t.pjjg=dbms_random.string('x', 6);
+update CC_DCPGXX t set t.wtdw=dbms_random.string('x', 6);
+
+update cc_fxry_baseinfo t set t.xm=(dbms_random.string('a', 5) );
+update cc_fxry_baseinfo t set t.cym=(dbms_random.string('a', 5) );
+update cc_fxry_baseinfo t set t.sfzh=(dbms_random.string('x',18) );
+update cc_fxry_baseinfo t set t.csrq=sysdate;
+update cc_fxry_baseinfo t set t.grlxdh='12345678901';
+update cc_fxry_baseinfo t set t.zxtzswh=(dbms_random.string('a',20) );
+update cc_fxry_baseinfo t set t.dwhm=(dbms_random.string('x',11) );
+update cc_fxry_baseinfo t set t.sqjzjdjgmc=(dbms_random.string('a',25) );
+update cc_fxry_baseinfo t set t.zyfzss=null;
+update CC_FXRY_BASEINFO t set t.dwlxdh='12345678901';
+
+update CC_FXRY_DWLSXX t set t.dwhm='12345678901';
+
+update CC_FXRY_GLJBXX t set t.tzyy=dbms_random.string('a', 20);
+update CC_FXRY_GLJBXX t set t.spr=dbms_random.string('a', 5);
+
+update CC_FXRY_GRJL t set t.szdw=dbms_random.string('x', 20);
+
+update CC_FXRY_JCJZ t set t.jtswyy=dbms_random.string('x', 10);
+update CC_FXRY_JCJZ t set t.tsqkbzjbjjy=dbms_random.string('x', 10);
+update CC_FXRY_JCJZ t set t.sfsjcr=dbms_random.string('x', 5);
+
+update CC_FXRY_JTJSHGX t set t.xm=dbms_random.string('x', 5);
+update CC_FXRY_JTJSHGX t set t.szdw=dbms_random.string('x', 20);
+update CC_FXRY_JTJSHGX t set t.jtzz=dbms_random.string('x', 20);
+update CC_FXRY_JTJSHGX t set t.lxdh='12345678901';
+
+update  CC_FXRY_JYXX t set t.jyxxzynr=dbms_random.string('x', 5);
+update  CC_FXRY_JYXX t set t.jlr=dbms_random.string('x', 5);
+
+update CC_FXRY_JZDBG t set t.xxdz=dbms_random.string('x', 20);
+update CC_FXRY_JZDBG t set t.sfsshr=dbms_random.string('x', 5);
+update CC_FXRY_JZDBG t set t.xsfjspr=dbms_random.string('x', 5);
+
+update CC_FXRY_JZLXX  t  set t.jzlnr=dbms_random.string('x', 60);
+
+
+update CC_FXRY_JZXZCY t set t.sfzh=dbms_random.string('x', 18);
+update CC_FXRY_JZXZCY t set t.sj=dbms_random.string('x', 11);
+
+update CC_FXRY_RCBGXX t set t.bgnr=dbms_random.string('x', 60);
+update CC_FXRY_RCBGXX t set t.jlr=dbms_random.string('x', 5);
+
+
+update  CC_FXRY_SQFW t set t.sqfwdd=dbms_random.string('x', 10);
+update  CC_FXRY_SQFW t set t.sqfwnr=dbms_random.string('x', 10);
+update  CC_FXRY_SQFW t set t.sqfwbx=dbms_random.string('x', 10);
+update  CC_FXRY_SQFW t set t.jlr=dbms_random.string('x', 5);
+
+
+update  CC_FXRY_TAFXX t set t.xm=dbms_random.string('x', 6);
+update  CC_FXRY_TAFXX t set t.csrq=sysdate;
+update  CC_FXRY_TAFXX t set t.bpcxzjszjs=dbms_random.string('x', 20);
+
+update  CC_FXRY_TGXX t set t.zzczqk=dbms_random.string('x', 10);
+update  CC_FXRY_TGXX t set t.czjg=dbms_random.string('x', 10);
+
+update CC_FXRY_WCSQXX t set t.xsfjspr=dbms_random.string('x', 5);
+
+
+update CC_FXRY_XNSFXX t set t.hm='12345678901';
+update CC_FXRY_XNSFXX t set t.bz=dbms_random.string('x', 10);
+
+update CC_FXRY_XQBD t set t.bdrq=sysdate;
+update CC_FXRY_XQBD t set t.bdfd='1';
+update CC_FXRY_XQBD t set t.bdyy=dbms_random.string('x', 18);
+
+update CC_FXRY_YUZUI t set t.zcjg=dbms_random.string('x', 18);
+update CC_FXRY_YUZUI t set t.spjg=dbms_random.string('x', 18);
+update CC_FXRY_YUZUI t set t.xq=dbms_random.string('x', 2);
+
+
+update CC_FXRY_ZJWYSXX t set t.zxysjcxm=dbms_random.string('x', 6);
+update CC_FXRY_ZJWYSXX t set t.dwjzw=dbms_random.string('x', 6);
+update CC_FXRY_ZJWYSXX t set t.ysrq=sysdate;
+update CC_FXRY_ZJWYSXX t set t.ysjcjh=dbms_random.string('x', 6);
+
+
+update CC_FXRY_JRTDQYXX t set t.sqly='无';
+update CC_FXRY_JRTDQYXX t set t.sfsshr='无';
+update CC_FXRY_JRTDQYXX t set t.sfsshyj='无';
+update CC_FXRY_JRTDQYXX t set t.sfsshyj='无';
+update CC_FXRY_JRTDQYXX t set t.xsfjspr='无';
+update CC_FXRY_JRTDQYXX t set t.xsfjspyj='无';
+
+
+
+
+update CC_JG_JBXX t set t.fzr=dbms_random.string('x', 6);
+update CC_JG_JBXX t set t.lxdh='12345678901';
+update CC_JG_JBXX t set t.czhm='12345678901';
+update CC_JG_JBXX t set t.dzyx='RTFDG@qq.com';
+update CC_JG_JBXX t set t.dz='待更新';
+
+update CC_PERSONS t set t.name=dbms_random.string('x',6);
+update CC_PERSONS t set t.adress=dbms_random.string('x',6);
+update CC_PERSONS t set t.phone='12345678901';
+update CC_PERSONS t set t.workphone='12345678901';
+
+
+update CC_PERSON_SFXZGZRY t set t.xm=dbms_random.string('x',6);
+update CC_PERSON_SFXZGZRY t set t.csrq=sysdate;
+update CC_PERSON_SFXZGZRY t set t.sfzh=dbms_random.string('x', 18);
+update CC_PERSON_SFXZGZRY t set t.byyx=dbms_random.string('x', 20);
+update CC_PERSON_SFXZGZRY t set t.zw=dbms_random.string('x', 5);
+update CC_PERSON_SFXZGZRY t set t.sjhm='12345678901';
+update CC_PERSON_SFXZGZRY t set t.lxdh='12345678901';
+update CC_PERSON_SFXZGZRY t set t.dzyx='12345678901@126.com';
+update CC_PERSON_SFXZGZRY t set t.zz=dbms_random.string('x', 20);
+
+
+update CC_PERSON_SHZYZ t set t.xm=dbms_random.string('x',6);
+update CC_PERSON_SHZYZ t set t.csrq=sysdate;
+update CC_PERSON_SHZYZ t set t.sfzh=dbms_random.string('x', 18);
+update CC_PERSON_SHZYZ t set t.sj='12345678901';
+update CC_PERSON_SHZYZ t set t.lxdh='12345678901';
+update CC_PERSON_SHZYZ t set t.gzdw=dbms_random.string('x', 20);
+update CC_PERSON_SHZYZ t set t.jtzz=dbms_random.string('x', 20);
+
+
+update CC_FXRY_KSZRZC t set t.sfsshr=dbms_random.string('x', 6);
+update CC_FXRY_KSZRZC t set t.xsfjspr=dbms_random.string('x', 6);

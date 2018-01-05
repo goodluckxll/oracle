@@ -1,0 +1,9 @@
+create or replace procedure pro_for is
+i number;
+begin
+i:=0;
+while i<5 loop
+i:=i+1;
+insert into d_bm values(sys_guid(),sys_guid());
+end loop;
+end pro_for;

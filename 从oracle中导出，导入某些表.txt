@@ -1,0 +1,543 @@
+导出表中的部分（query)：
+expdp sfb/sfb dumpfile=zp.dmp  tables = A query=A:'"where show_date <= 20121010"'
+注意：由单引号包含双引号
+ 
+ 
+导出多个表(tables)：
+expdp sfb/sfb@sfb dumpfile=zp.dmp  tables = (A,B,C,D,E,F)
+
+
+
+
+
+ 当使用IMPDP完成数据库导入时，如遇到表已存在时，Oracle提供给我们如下四种处理方式：
+    a.忽略（SKIP，默认行为）；
+    b.在原有数据基础上继续增加（APPEND）；
+    c.先DROP表，然后创建表，最后完成数据插入（REPLACE）；
+    d.先TRUNCATE，再完成数据插入（TRUNCATE）。
+
+    先用EXPDP生成一份dump文件
+    sec@secDB /expdp$ expdp sec/sec directory=expdp_dir dumpfile=`date +"%Y%m%d%H%M%S"`_sec.dmp logfile=`date +"%Y%m%d%H%M%S"`_sec.log
+
+    分别使用四中方式真实的感知一下具体效果
+    用到的IMPDP语句统一汇总在这里，方便参考。
+    SKIP：
+    impdp system/sys directory=expdp_dir dumpfile=20100401102917_sec.dmp logfile=20100401102917_sec_impdp.log TABLE_EXISTS_ACTION=SKIP
+
+    APPEND：
+    impdp system/sys directory=expdp_dir dumpfile=20100401102917_sec.dmp logfile=20100401102917_sec_impdp.log TABLE_EXISTS_ACTION=APPEND
+
+    REPLACE：
+    impdp system/sys directory=expdp_dir dumpfile=20100401102917_sec.dmp logfile=20100401102917_sec_impdp.log TABLE_EXISTS_ACTION=REPLACE
+
+    TRUNCATE：
+    impdp system/sys directory=expdp_dir dumpfile=20100401102917_sec.dmp logfile=20100401102917_sec_impdp.log TABLE_EXISTS_ACTION=TRUNCATE
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	$ impdp databackup/databackup@sfb  dumpfile=abc.dmp tables=sfb.CC_TUPIAN remap_schema=sfb:databackup TABLE_EXISTS_ACTION=TRUNCATE
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	Oracle expdp/impdp常用示例整理
+原创koumm2014-11-08 22:54:37评论(0)1093人阅读
+expdp不依赖和参考NLS_LANG的设置，而是完全按照数据库本身的字符集进行转换, 平时数据量不大时一直采用exp/imp导数据库，到了数据量大的时候expdp/impdp就看到效果了，一次exp导出28G的DMP文件用了3个小时，采用EXPDP用了20分钟。
+
+1. 创建测试数据
+SQL> create tablespace DATA datafile '/u01/app/oracle/oradata/orcl/DATA.dbf' size 10m autoextend on next 10m;   
+SQL> create user abc identified by abc default tablespace DATA;    
+SQL> grant connect,resource to abc;    
+SQL> conn abc/abc    
+SQL> create table t as select * from all_objects;    
+SQL> select * from tab;    
+TNAME                          TABTYPE  CLUSTERID    
+------------------------------ ------- ----------    
+T                              TABLE    
+SQL>
+
+2. 配置directory目录与用户访问权限
+SQL> conn / as sysdba;   
+SQL> create directory dump_dir as '/home/oracle';    
+SQL> col owner format a5    
+SQL> col directory_name format a25;    
+SQL> col directory_path format a50;    
+SQL> select * from dba_directories;
+
+OWNER DIRECTORY_NAME            DIRECTORY_PATH   
+----- ------------------------- --------------------------------------------------    
+SYS   DUMP_DIR                  /home/oracle    
+SQL>     
+SQL> grant read,write on directory dump_dir to public;    
+注：public角色隐式授予每位用户, 数据库中创建的每个账户都有权访问这些权限, 也可以针对用户授权。
+
+删除多余目录配置SQL：
+
+drop directory dump_dir;
+
+ 
+
+3. 导出导入全库
+(1) 全库导出
+$ expdp \'/ as sysdba\' directory=dump_dir full=y dumpfile=fulldb.dmp parallel=2;
+
+(2) 全库导入
+$ impdp \'/ as sysdba\' directory=dump_dir full=y dumpfile=fulldb.dmp parallel=2 table_exists_action=replace;
+
+4. 导出导入用户
+(1) 同用户导入导出
+$ expdp abc/abc directory=dump_dir dumpfile=abc.dmp
+
+导入示例如下：需要创建abc用户
+
+$ impdp abc/abc directory=dump_dir dumpfile=abc.dmp
+
+(2) 不同用户导入导出,abc用户下数据导入到tom用户下
+$ expdp abc/abc directory=dump_dir dumpfile=abc.dmp logfile=data.log
+
+导入示例如下：如果不事先创建tom用户的话，IMPDP会自动创建tom用户，需要用有权限的帐号，本例是采用系统管理员权限。
+
+$ impdp \'/ as sysdba\' directory=dump_dir dumpfile=abc.dmp remap_schema=abc:tom
+
+先创建tom用户的导入方式
+
+$ impdp tom/tom directory=dump_dir dumpfile=abc.dmp remap_schema=abc:tom
+
+(3) 同时导出两个用户的所有表，分别导入，也可以一起导入。
+expdp \'/ as sysdba\' directory=dump_dir dumpfile=db_abc_tom.dmp schemas=abc,tom
+
+(4) 导出表
+expdp abc/abc directory=dump_dir dumpfile=abc_tables.dmp TABLES=emp,dept
+
+(5) 并行导出，可以加入速度
+expdp abc/abc directory=dump_dir dumpfile=full.dmp parallel=40
+
+(6) 传输表空间
+expdp \'/ as sysdba \' dumpfile=tjoa.dmp directory=dump_dir transport_tablespaces=TJOA
+impdp \'/ as sysdba \' dumpfile=tjoa.dmp directory=dump_dir transport_datafiles=/u01/app/oracle/oradata/orcl/tjoa.dbf remap_schema=tjoa:tjoa
+
+传输表空间具体过程：http://koumm.blog.51cto.com/703525/1574822
+
+ 
+
+5. 跨版本导入问题
+低版本是不能导入高版本dmp，需要在高版本的EXPDP导出时指定版本号导出。低版本IMPDP无需指定版本。
+
+例如：11.2.0.4导入到10.2.0.5
+
+expdp abc/abc directory=dump_dir dumpfile=abc_tables.dmp version=10.2.0.5.0
+
+ 
+
+6. 同一数据库不同用户间通过IMPDP实现数据迁移复制
+说明：IMPDP工具提供的NETWORK_LINK参数可以实现的用户间的数据复制。
+
+1）确认tnsnames.ora文件中的连接串
+$ cat $ORACLE_HOME/network/admin/tnsnames.ora
+
+ORCL =
+(DESCRIPTION =
+(ADDRESS = (PROTOCOL = TCP)(HOST = node1)(PORT = 1521))
+(CONNECT_DATA =
+(SERVER = DEDICATED)
+(SERVICE_NAME = orcl)
+)
+)
+
+EXTPROC_CONNECTION_DATA =
+(DESCRIPTION =
+(ADDRESS_LIST =
+(ADDRESS = (PROTOCOL = TCP)(HOST = HOSTNAME)(PORT = 1521))
+)
+(CONNECT_DATA =
+(SERVICE_NAME = PLSExtProc)
+)
+)
+
+ 
+
+2）在数据库系统中创建一个指向自身的DATABASE LINK
+语法示例: 
+CREATE DATABASE LINK 数据库链接名 CONNECT TO 用户名 IDENTIFIED BY 密码 USING '本地配置的数据的实例名';
+
+database link使用方式:
+不指定 : 默认值建立一个private的database link, 只有创建它的用户可以使用。
+PUBLIC : 连接可以被数据库中的所有的用户访问。
+
+SQL> create public database link dblink_self connect to system identified by oracle using 'ORCL';
+SQL> 
+SQL> select * from dba_db_links;
+
+OWNER DB_LINK USERNAME HOST CREATED
+--------------- ------------------------- --------------- ------------------------- --------------
+PUBLIC DBLINK_SELF SYSTEM ORCL 11-114
+
+删除dblink方式：
+
+SQL> drop public database link DBLINK_SELF;
+
+ 
+
+3) 复制ABC用户的数据到XXX用户
+这里事先创建了xxx用户，这里才报的ora-31684，可以不用事先创建用户,impdp会自动创建。
+
+$ impdp system/oracle network_link=dblink_self schemas=abc remap_schema=abc:xxx
+
+Import: Release 10.2.0.5.0 - 64bit Production on 11 112014 22:23:51
+
+Copyright (c) 2003, 2007, Oracle. All rights reserved.
+
+Connected to: Oracle Database 10g Enterprise Edition Release 10.2.0.5.0 - 64bit Production
+With the Partitioning, OLAP, Data Mining and Real Application Testing options
+Starting "SYSTEM"."SYS_IMPORT_SCHEMA_01": system/******** network_link=dblink_self schemas=abc remap_schema=abc:xxx 
+Estimate in progress using BLOCKS method...
+Processing object type SCHEMA_EXPORT/TABLE/TABLE_DATA
+Total estimation using BLOCKS method: 5 MB
+Processing object type SCHEMA_EXPORT/USER
+ORA-31684: Object type USER:"XXX" already exists
+Processing object type SCHEMA_EXPORT/SYSTEM_GRANT
+Processing object type SCHEMA_EXPORT/ROLE_GRANT
+Processing object type SCHEMA_EXPORT/DEFAULT_ROLE
+Processing object type SCHEMA_EXPORT/PRE_SCHEMA/PROCACT_SCHEMA
+Processing object type SCHEMA_EXPORT/TABLE/TABLE
+. . imported "XXX"."T" 40702 rows
+Processing object type SCHEMA_EXPORT/TABLE/STATISTICS/TABLE_STATISTICS
+Job "SYSTEM"."SYS_IMPORT_SCHEMA_01" completed with 1 error(s) at 22:24:09
+
+查看数据表：
+[oracle@node1 ~]$ sqlplus xxx/xxx;
+
+SQL*Plus: Release 10.2.0.5.0 - Production on 11 22:25:00 2014
+
+Copyright (c) 1982, 2010, Oracle. All Rights Reserved.
+
+Connected to:
+Oracle Database 10g Enterprise Edition Release 10.2.0.5.0 - 64bit Production
+With the Partitioning, OLAP, Data Mining and Real Application Testing options
+
+SQL> select * from tab;
+
+TNAME TABTYPE CLUSTERID
+------------------------------ ------- ----------
+T TABLE
+
+SQL>
+
+说明：表中字段有LONG类型的字段，该方式network_link不支持，可以采用EXP/EXPDP方式导出再导入方式。
+ORA-31679: Table data object "TEST"."LOG_BLOG" has long columns, and longs can not be loaded/unloaded using a network link
+
+ 
+
+7. 不同数据库间通过IMPDP实现数据库用户间迁移复制
+说明：IMPDP工具提供的NETWORK_LINK参数可以实现的不同数据库间用户间的数据复制,本例是network_link的又一用法，原理一致，可以在实际环境中灵活使用。
+
+node1(192.168.233.150): orcl : abc 用户
+node2(192.168.233.160): orcl : xyz 用户
+
+1）在node2上配置到node1的tnsnames.ora服务名文件
+$ cat $ORACLE_HOME/network/admin/tnsnames.ora
+
+ORCL_NODE1 =
+(DESCRIPTION =
+(ADDRESS = (PROTOCOL = TCP)(HOST = 192.168.233.150)(PORT = 1521))
+(CONNECT_DATA =
+(SERVER = DEDICATED)
+(SERVICE_NAME = orcl)
+)
+)
+
+2）在NODE2数据库系统中创建一个指向自身的DATABASE LINK
+语法示例: 
+CREATE DATABASE LINK 数据库链接名 CONNECT TO 用户名 IDENTIFIED BY 密码 USING '本地配置的数据的实例名';
+
+SQL> create public database link dblink_to_node1 connect to system identified by oracle using 'ORCL_NODE1';
+SQL>
+
+3) 复制node1上ABC用户的数据到node2上xyz用户下
+这里node2事先创建好abc用户对应的表空间DATA.
+
+SQL> create tablespace DATA datafile '/u01/app/oracle/oradata/orcl/DATA.dbf' size 10m autoextend on next 10m;
+
+[oracle@node2 ~]$ impdp system/oracle network_link=dblink_to_node1 schemas=abc remap_schema=abc:xyz
+
+Import: Release 10.2.0.5.0 - 64bit Production on 11 112014 23:23:08
+
+Copyright (c) 2003, 2007, Oracle. All rights reserved.
+
+Connected to: Oracle Database 10g Enterprise Edition Release 10.2.0.5.0 - 64bit Production
+With the Partitioning, OLAP, Data Mining and Real Application Testing options
+Starting "SYSTEM"."SYS_IMPORT_SCHEMA_01": system/******** network_link=dblink_to_node1 schemas=abc remap_schema=abc:xyz 
+Estimate in progress using BLOCKS method...
+Processing object type SCHEMA_EXPORT/TABLE/TABLE_DATA
+Total estimation using BLOCKS method: 5 MB
+Processing object type SCHEMA_EXPORT/USER
+Processing object type SCHEMA_EXPORT/SYSTEM_GRANT
+Processing object type SCHEMA_EXPORT/ROLE_GRANT
+Processing object type SCHEMA_EXPORT/DEFAULT_ROLE
+Processing object type SCHEMA_EXPORT/PRE_SCHEMA/PROCACT_SCHEMA
+Processing object type SCHEMA_EXPORT/TABLE/TABLE
+. . imported "XYZ"."T" 40702 rows
+Processing object type SCHEMA_EXPORT/TABLE/STATISTICS/TABLE_STATISTICS
+Job "SYSTEM"."SYS_IMPORT_SCHEMA_01" successfully completed at 23:23:21
+
+[oracle@node2 ~]$
+
+说明：这里专门采用通过impdp自动创建用户的方式，故意没有提前创建用户，但是导入之后还需要重新为用户创建密码。
+node2查看数据表：
+SQL> conn / as sysdba;
+Connected.
+SQL> 
+SQL> alter user xyz identified by xyz default tablespace DATA;
+
+User altered.
+
+SQL> conn xyz/xyz;
+Connected.
+SQL> select * from tab;
+
+TNAME TABTYPE CLUSTERID
+------------------------------ ------- ----------
+T TABLE
+
+SQL>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+【IMPDP】实现不同用户之间的数据迁移——REMAP_SCHEMA参数
+转载 2011年07月20日 18:32:32 标签：schema /object /import /oracle /64bit /database 24737
+ 众所周知，IMP工具的FROMUSER和TOUSER参数可以实现将一个用户的的数据迁移到另外一个用户。同样的功能在IMPPDP工具中如何得以体现呢？
+答案就是：使用IMPPDP的REMAP_SCHEMA参数实现。
+
+简单演示一下，供参考。
+
+任务：将sec用户中的数据迁移到secooler用户。
+
+1.分别确认sec和secooler用户下的表和数据情况
+1）sec用户下有一张T表，含有24360行数据
+sys@ora10g> conn sec/sec
+Connected.
+sec@ora10g> select * from tab;
+
+TNAME                          TABTYPE  CLUSTERID
+------------------------------ ------- ----------
+T                              TABLE
+
+sec@ora10g> select count(*) from t;
+
+  COUNT(*)
+----------
+     24360
+
+2）确认secooler用户不包含表T
+secooler@ora10g> conn secooler/secooler
+Connected.
+secooler@ora10g> select * from tab;
+
+no rows selected
+
+2.创建目录对象expdp_dir
+sys@ora10g> create or replace directory expdp_dir as '/expdp';
+
+Directory created.
+
+3.将目录对象expdp_dir的读写权限授权给sec和secooler用户
+sys@ora10g> grant read,write on directory expdp_dir to sec;
+
+Grant succeeded.
+
+sys@ora10g> grant read,write on directory expdp_dir to secooler;
+
+Grant succeeded.
+
+4.生成sec的备份文件
+ora10g@secDB /expdp$ expdp sec/sec directory=expdp_dir dumpfile=`date +"%Y%m%d%H%M%S"`_sec.dmp logfile=`date +"%Y%m%d%H%M%S"`_sec.log
+
+Export: Release 10.2.0.3.0 - 64bit Production on Thursday, 01 April, 2010 10:29:17
+
+Copyright (c) 2003, 2005, Oracle.  All rights reserved.
+
+Connected to: Oracle Database 10g Enterprise Edition Release 10.2.0.3.0 - 64bit Production
+With the Partitioning, Oracle Label Security, OLAP and Data Mining Scoring Engine options
+Starting "SEC"."SYS_EXPORT_SCHEMA_01":  sec/******** directory=expdp_dir dumpfile=20100401102917_sec.dmp logfile=20100401102917_sec.log
+Estimate in progress using BLOCKS method...
+Processing object type SCHEMA_EXPORT/TABLE/TABLE_DATA
+Total estimation using BLOCKS method: 3 MB
+Processing object type SCHEMA_EXPORT/USER
+Processing object type SCHEMA_EXPORT/SYSTEM_GRANT
+Processing object type SCHEMA_EXPORT/ROLE_GRANT
+Processing object type SCHEMA_EXPORT/DEFAULT_ROLE
+Processing object type SCHEMA_EXPORT/PRE_SCHEMA/PROCACT_SCHEMA
+Processing object type SCHEMA_EXPORT/TABLE/TABLE
+Processing object type SCHEMA_EXPORT/TABLE/INDEX/INDEX
+Processing object type SCHEMA_EXPORT/TABLE/CONSTRAINT/CONSTRAINT
+Processing object type SCHEMA_EXPORT/TABLE/INDEX/STATISTICS/INDEX_STATISTICS
+Processing object type SCHEMA_EXPORT/TABLE/COMMENT
+. . exported "SEC"."T"                                   2.259 MB   24360 rows
+Master table "SEC"."SYS_EXPORT_SCHEMA_01" successfully loaded/unloaded
+******************************************************************************
+Dump file set for SEC.SYS_EXPORT_SCHEMA_01 is:
+  /expdp/20100401102917_sec.dmp
+Job "SEC"."SYS_EXPORT_SCHEMA_01" successfully completed at 10:29:20
+
+生成的备份文件信息如下：
+ora10g@secDB /expdp$ ls -l *sec.dmp
+-rw-r----- 1 oracle oinstall 2.5M Apr  1 10:29 20100401102917_sec.dmp
+
+5.使用IMPDP的REMAP_SCHEMA参数实现secooler用户的数据导入
+ora10g@secDB /expdp$ impdp secooler/secooler directory=expdp_dir dumpfile=20100401102917_sec.dmp logfile=20100401102917_sec_impdp.log REMAP_SCHEMA=sec:secooler
+
+Import: Release 10.2.0.3.0 - 64bit Production on Thursday, 01 April, 2010 10:32:10
+
+Copyright (c) 2003, 2005, Oracle.  All rights reserved.
+
+Connected to: Oracle Database 10g Enterprise Edition Release 10.2.0.3.0 - 64bit Production
+With the Partitioning, Oracle Label Security, OLAP and Data Mining Scoring Engine options
+Master table "SECOOLER"."SYS_IMPORT_FULL_01" successfully loaded/unloaded
+Starting "SECOOLER"."SYS_IMPORT_FULL_01":  secooler/******** directory=expdp_dir dumpfile=20100401102917_sec.dmp logfile=20100401102917_sec_impdp.log REMAP_SCHEMA=sec:secooler
+Processing object type SCHEMA_EXPORT/USER
+ORA-31684: Object type USER:"SECOOLER" already exists
+Processing object type SCHEMA_EXPORT/SYSTEM_GRANT
+Processing object type SCHEMA_EXPORT/ROLE_GRANT
+Processing object type SCHEMA_EXPORT/DEFAULT_ROLE
+Processing object type SCHEMA_EXPORT/PRE_SCHEMA/PROCACT_SCHEMA
+Processing object type SCHEMA_EXPORT/TABLE/TABLE
+Processing object type SCHEMA_EXPORT/TABLE/TABLE_DATA
+. . imported "SECOOLER"."T"                              2.259 MB   24360 rows
+Job "SECOOLER"."SYS_IMPORT_FULL_01" completed with 1 error(s) at 10:32:12
+
+OK，迁入任务完成。
+
+6.确认最后的迁移迁移成果
+连接到secooler用户确认T表及其中的数据是否已经完成导入。
+sec@ora10g> conn secooler/secooler
+Connected.
+secooler@ora10g> select * from tab;
+
+TNAME                          TABTYPE  CLUSTERID
+------------------------------ ------- ----------
+T                              TABLE
+
+secooler@ora10g> select count(*) from t;
+
+  COUNT(*)
+----------
+     24360
+
+OK，搞定。
+
+7.进一步参考资料
+最好的参考资料就是Oracle的官方文档，参考链接如下：
+http://download.oracle.com/docs/cd/B19306_01/server.102/b14215/dp_import.htm#sthref340
+便于参考，copy一份在此：
+REMAP_SCHEMA
+Default: none
+
+Purpose
+
+Loadsall objects from the source schema into a target schema.
+
+Syntax and Description
+
+REMAP_SCHEMA=source_schema:target_schema
+
+MultipleREMAP_SCHEMAlines can be specified, but the source schema must be different for each one. However, different source schemas can map to the same target schema. The mapping may not be 100 percent complete, because there are certain schema references that Import is not capable of finding. For example, Import will not find schema references ××ded within the body of definitions of types, views, procedures, and packages.
+
+If the schema you are remapping to does not already exist, the import operation creates it, provided the dump file set contains the necessaryCREATEUSERmetadata for the source schema and you are importing with enough privileges. For example, the following Export commands would create the dump file sets with the necessary metadata to create a schema, because the userSYSTEMhas the necessary privileges:
+
+> expdp SYSTEM/passwordSCHEMAS=hr
+> expdp SYSTEM/passwordFULL=y
+
+If your dump file set does not contain the metadata necessary to create a schema, or if you do not have privileges, then the target schema must be created before the import operation is performed. This is because the unprivileged dump files do not contain the necessary information for the import to create the schema automatically.
+
+If the import operation does create the schema, then after the import is complete, you must assign it a valid password in order to connect to it. The SQL statement to do this, which requires privileges, is:
+
+SQL> ALTER USER [schema_name] IDENTIFIED BY [new_pswd]
+Restrictions
+
+Unprivileged users can perform. schema remaps only if their schema is the target schema of the remap. (Privileged users can perform. unrestricted schema remaps.)
+
+For example,SCOTTcan remap hisBLAKE's objects toSCOTT, butSCOTTcannot remapSCOTT's objects toBLAKE.
+
+Example
+
+Suppose that you execute the following Export and Import commands to remap thehrschema into thescottschema:
+
+> expdp SYSTEM/passwordSCHEMAS=hr DIRECTORY=dpump_dir1 DUMPFILE=hr.dmp
+
+> impdp SYSTEM/passwordDIRECTORY=dpump_dir1 DUMPFILE=hr.dmp
+REMAP_SCHEMA=hr:scott
+
+In this example, if userscottalready exists before the import, then the ImportREMAP_SCHEMAcommand will add objects from thehrschema into the existingscottschema. You can connect to thescottschema after the import by using the existing password (without resetting it).
+
+If userscottdoes not exist before you execute the import operation, Import automatically creates it with an unusable password. This is possible because the dump file,hr.dmp, was created bySYSTEM,which has the privileges necessary to create a dump file that contains the metadata needed to create a schema. However, you cannot connect toscotton completion of the import, unless you reset the password forscotton the target database after the import completes.
+
+8.小结
+在从EXP备份工具转到EXPDP工具的过程中，有很多的变动一定要注意，防止因误用导致效率低下。
+无论是从功能上还是效率上讲，EXPDP都是首选（需要在服务器端使用）。
+
+Good luck.
+
+secooler
+10.04.01
+
+-- The End --http://space.itpub.net/519536/viewspace-631042
