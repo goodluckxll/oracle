@@ -20,7 +20,7 @@ truncate table CC_XMPP_MSG_CROSSBORDER
 
 
 
-impdp sqjz/sqjz@sqjzsc dumpfile=sqjz_171127_sc.dmp  
+impdp sqjz/sqjz@sqjzsc dumpfile=sqjz_180117_kf.dmp  
 exclude=TABLE:\"IN\(\'CC_FXRY_TUPIAN\'\)\"  
 exclude=TABLE:\"IN\(\'CC_LOCATION_INFO\'\)\"  
 exclude=TABLE:\"IN\(\'CC_LOCATION_INFO_BUFFER\'\)\"  
