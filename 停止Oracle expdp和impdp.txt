@@ -1,0 +1,10 @@
+≤Èø¥ ”Õºdba_datapump_jobs
+
+ select job_name,state from dba_datapump_jobs;
+
+ expdp \"sfb/sfb@sfb\" attach=SYS_EXPORT_SCHEMA_02
+
+ stop_job=immediate 
+  
+ yes
+
