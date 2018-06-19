@@ -1,0 +1,44 @@
+主要从数据库的表dba_data_files,dba_segments两张表中获取。
+
+默认数据库保存的是byte单位，转换关系如下: 
+1024bytes = 1kb 
+1024KB = 1M 
+1024M = 1G
+
+
+
+CREATE OR REPLACE VIEW V_GET_DISKSPACE AS
+ SELECT A.TABLESPACE_NAME,
+ A.USE "USED (MB)",
+ (B.TOTAL-A.USE) "FREE (MB)",
+ B.TOTAL "TOTAL (MB)",
+ round((B.TOTAL-A.USE)/B.TOTAL,5)*100||'%' "PER_FREE"
+ FROM
+ (
+ select TABLESPACE_NAME,sum(bytes)/(1024*1024) as USE from dba_segments
+ /*where tablespace_name NOT IN ('USERS','SYSAUX','UNDOTBS1','SYSTEM','UNDOTBS2')*/
+ GROUP BY TABLESPACE_NAME
+ ) A ,
+ (
+ WITH TABLESPACE_TOTAL AS
+ (
+ SELECT tablespace_name,sum(MAXBYTES)/(1024*1024) TOTAL FROM DBA_DATA_FILES T
+ WHERE /*T.TABLESPACE_NAME NOT IN ('USERS','SYSAUX','UNDOTBS1','SYSTEM','UNDOTBS2')
+ AND*/ T.AUTOEXTENSIBLE='YES' group by tablespace_name
+ UNION ALL
+ SELECT tablespace_name,sum(bytes) TOTAL FROM DBA_DATA_FILES T
+ WHERE /*T.TABLESPACE_NAME NOT IN ('USERS','SYSAUX','UNDOTBS1','SYSTEM','UNDOTBS2')
+ AND*/ T.AUTOEXTENSIBLE='NO' group by tablespace_name
+ )
+ SELECT TABLESPACE_NAME,SUM(TOTAL) TOTAL FROM TABLESPACE_TOTAL GROUP BY TABLESPACE_NAME
+ ) B
+ WHERE A.TABLESPACE_NAME=B.TABLESPACE_NAME;
+
+
+
+
+LINUX服务器查询
+
+du -sch * 使用该命令查询当前目录下文件夹占用的空间的情况
+
+df -hl 查询磁盘剩余空间
