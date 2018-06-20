@@ -1,0 +1,16 @@
+方法一：
+
+select segment_name, bytes/1024/1024/1024 G 
+from user_segments 
+where segment_type = 'TABLE' order by bytes desc;
+
+
+方法二：
+SELECT * FROM 
+( 
+SELECT SEGMENT_NAME, SUM(BYTES)/1024/1024/1024 G 
+FROM DBA_SEGMENTS 
+WHERE OWNER = user 
+GROUP BY SEGMENT_NAME 
+ORDER BY 2 DESC 
+);
