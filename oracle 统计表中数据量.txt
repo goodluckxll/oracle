@@ -1,0 +1,41 @@
+--查询所有表
+select TABLE_NAME,NUM_ROWS from dba_all_tables order by num_rows desc
+
+select t.table_name,t.num_rows from user_tables t order by t.num_rows desc;
+ 
+--如查询某个用户的：
+select TABLE_NAME,NUM_ROWS from dba_all_tables where owner='用户大写' order by num_rows desc；
+
+
+
+
+
+
+
+
+dba_tables : 系统里所有的表的信息，需要DBA权限才能查询
+all_tables : 当前用户有权限的表的信息（只要对某个表有任何权限，即可在此视图中看到表的相关信息）
+user_tables: 当前用户名下的表的信息
+
+所以以上3个视图中，user_tables的范围最小，all_tables看到的东西稍多一些，而dba_tables看到最多的信息。
+
+
+
+一、user_tables、all_tables、dba_tables关系：
+
+       user_tables ：可查询当前用户的表；
+
+       all_tables ：可查询所有用户的表；
+
+       dba_tables：可查询包括系统表在内的所有表。
+
+
+二、user_users、all_users、dba_users 关系：
+
+       user_users ：描述当前用户；
+
+       all_users ：列出数据库中对当前用户可见的所有用户；
+
+       dba_users ：描述数据库中所有用户。
+
+       （系统权限递增）
