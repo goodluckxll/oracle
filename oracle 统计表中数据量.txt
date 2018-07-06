@@ -1,10 +1,10 @@
---²éÑ¯ËùÓĞ±í
+--æŸ¥è¯¢æ‰€æœ‰è¡¨
 select TABLE_NAME,NUM_ROWS from dba_all_tables order by num_rows desc
 
 select t.table_name,t.num_rows from user_tables t order by t.num_rows desc;
  
---Èç²éÑ¯Ä³¸öÓÃ»§µÄ£º
-select TABLE_NAME,NUM_ROWS from dba_all_tables where owner='ÓÃ»§´óĞ´' order by num_rows desc£»
+--å¦‚æŸ¥è¯¢æŸä¸ªç”¨æˆ·çš„ï¼š
+select TABLE_NAME,NUM_ROWS from dba_all_tables where owner='ç”¨æˆ·å¤§å†™' order by num_rows descï¼›
 
 
 
@@ -13,29 +13,29 @@ select TABLE_NAME,NUM_ROWS from dba_all_tables where owner='ÓÃ»§´óĞ´' order by n
 
 
 
-dba_tables : ÏµÍ³ÀïËùÓĞµÄ±íµÄĞÅÏ¢£¬ĞèÒªDBAÈ¨ÏŞ²ÅÄÜ²éÑ¯
-all_tables : µ±Ç°ÓÃ»§ÓĞÈ¨ÏŞµÄ±íµÄĞÅÏ¢£¨Ö»Òª¶ÔÄ³¸ö±íÓĞÈÎºÎÈ¨ÏŞ£¬¼´¿ÉÔÚ´ËÊÓÍ¼ÖĞ¿´µ½±íµÄÏà¹ØĞÅÏ¢£©
-user_tables: µ±Ç°ÓÃ»§ÃûÏÂµÄ±íµÄĞÅÏ¢
+dba_tables : ç³»ç»Ÿé‡Œæ‰€æœ‰çš„è¡¨çš„ä¿¡æ¯ï¼Œéœ€è¦DBAæƒé™æ‰èƒ½æŸ¥è¯¢
+all_tables : å½“å‰ç”¨æˆ·æœ‰æƒé™çš„è¡¨çš„ä¿¡æ¯ï¼ˆåªè¦å¯¹æŸä¸ªè¡¨æœ‰ä»»ä½•æƒé™ï¼Œå³å¯åœ¨æ­¤è§†å›¾ä¸­çœ‹åˆ°è¡¨çš„ç›¸å…³ä¿¡æ¯ï¼‰
+user_tables: å½“å‰ç”¨æˆ·åä¸‹çš„è¡¨çš„ä¿¡æ¯
 
-ËùÒÔÒÔÉÏ3¸öÊÓÍ¼ÖĞ£¬user_tablesµÄ·¶Î§×îĞ¡£¬all_tables¿´µ½µÄ¶«Î÷ÉÔ¶àÒ»Ğ©£¬¶ødba_tables¿´µ½×î¶àµÄĞÅÏ¢¡£
-
-
-
-Ò»¡¢user_tables¡¢all_tables¡¢dba_tables¹ØÏµ£º
-
-       user_tables £º¿É²éÑ¯µ±Ç°ÓÃ»§µÄ±í£»
-
-       all_tables £º¿É²éÑ¯ËùÓĞÓÃ»§µÄ±í£»
-
-       dba_tables£º¿É²éÑ¯°üÀ¨ÏµÍ³±íÔÚÄÚµÄËùÓĞ±í¡£
+æ‰€ä»¥ä»¥ä¸Š3ä¸ªè§†å›¾ä¸­ï¼Œuser_tablesçš„èŒƒå›´æœ€å°ï¼Œall_tablesçœ‹åˆ°çš„ä¸œè¥¿ç¨å¤šä¸€äº›ï¼Œè€Œdba_tablesçœ‹åˆ°æœ€å¤šçš„ä¿¡æ¯ã€‚
 
 
-¶ş¡¢user_users¡¢all_users¡¢dba_users ¹ØÏµ£º
 
-       user_users £ºÃèÊöµ±Ç°ÓÃ»§£»
+ä¸€ã€user_tablesã€all_tablesã€dba_tableså…³ç³»ï¼š
 
-       all_users £ºÁĞ³öÊı¾İ¿âÖĞ¶Ôµ±Ç°ÓÃ»§¿É¼ûµÄËùÓĞÓÃ»§£»
+       user_tables ï¼šå¯æŸ¥è¯¢å½“å‰ç”¨æˆ·çš„è¡¨ï¼›
 
-       dba_users £ºÃèÊöÊı¾İ¿âÖĞËùÓĞÓÃ»§¡£
+       all_tables ï¼šå¯æŸ¥è¯¢æ‰€æœ‰ç”¨æˆ·çš„è¡¨ï¼›
 
-       £¨ÏµÍ³È¨ÏŞµİÔö£©
+       dba_tablesï¼šå¯æŸ¥è¯¢åŒ…æ‹¬ç³»ç»Ÿè¡¨åœ¨å†…çš„æ‰€æœ‰è¡¨ã€‚
+
+
+äºŒã€user_usersã€all_usersã€dba_users å…³ç³»ï¼š
+
+       user_users ï¼šæè¿°å½“å‰ç”¨æˆ·ï¼›
+
+       all_users ï¼šåˆ—å‡ºæ•°æ®åº“ä¸­å¯¹å½“å‰ç”¨æˆ·å¯è§çš„æ‰€æœ‰ç”¨æˆ·ï¼›
+
+       dba_users ï¼šæè¿°æ•°æ®åº“ä¸­æ‰€æœ‰ç”¨æˆ·ã€‚
+
+       ï¼ˆç³»ç»Ÿæƒé™é€’å¢ï¼‰
