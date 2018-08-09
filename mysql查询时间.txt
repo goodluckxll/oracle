@@ -1,0 +1,2 @@
+select count(*) from lbs_request t where DATE_FORMAT(t.REQ_TIME,'%Y%m%d') 
+BETWEEN '20180727' and '20180809' order by t.REQ_TIME desc;
