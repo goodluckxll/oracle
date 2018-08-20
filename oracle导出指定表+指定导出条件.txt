@@ -1,0 +1,1 @@
+expdp sqjz/sqjz@commdb dumpfile=XXXX.dmp tables=sqjz.CC_LOCATION_INFO query="' where loc_time>=to_date(''2017-12-31 00:00:00'',''yyyy-mm-dd hh24:mi:ss'')  and  loc_time<=to_date(''2018-12-31 00:00:00'',''yyyy-mm-dd hh24:mi:ss'')'" nologfile=y
