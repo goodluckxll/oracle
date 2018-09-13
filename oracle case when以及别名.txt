@@ -1,0 +1,9 @@
+select t.state,t.xb,
+       case 
+           when t.state ='1' and t.xb = '1' then '在矫男'
+           when t.state ='1' and t.xb = '2' then '在矫女'
+           when t.state ='4' and t.xb = '1' then '解矫男'
+           when t.state ='4' and t.xb = '1' then '解矫女'
+           else '未知'
+       end 
+ from cc_fxry_baseinfo t
