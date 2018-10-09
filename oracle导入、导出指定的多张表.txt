@@ -1,0 +1,4 @@
+
+
+
+expdp sqjz/sqjz@sqjzsc dumpfile=301.dmp ?include=table:\"in \(\'A\',\'B\',\'C\',\'D\'\)\"?
