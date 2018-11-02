@@ -1,0 +1,25 @@
+SQLServer插入语句： insert into 表名(字段1，字段2..)(select 字段1，字段2...from 表名)
+
+内部链接：
+
+select 字段1,....字段n from 表1 inner join 表2 on表1.字段=表2.字段；
+
+外部链接：
+
+select 字段1,...字段n from 表1 right outer join 表2 on 表1.字段=表2.字段
+
+oracle的循环语句
+
+查询重复记录：
+
+select * from people where xid in (select xid from people group by xid having count(xid)>1);
+
+删除重复记录：
+
+delete from people where xid in(select xid from people group by xid having count(xid)>1) and rowid not in(select min(xid) from people group by xid having count(xid)>1);
+
+mangodb、Cassandra、OceanBase
+
+sql常用：备份、脚本、建库、分组（having）、嵌套查询、联合查询（内连接和 外连接、组合查询、视图、存储过程、事务、游标；
+
+数据库的事务
