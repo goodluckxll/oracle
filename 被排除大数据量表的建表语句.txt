@@ -1,0 +1,615 @@
+create table SQJZ.CC_XMPP_MSG_CROSSBORDER
+(
+  ID        VARCHAR2(32) not null,
+  FXRY_ID   VARCHAR2(32),
+  TIME      DATE,
+  LONGITUDE NUMBER(14,6),
+  LATITUDE  NUMBER(14,6),
+  ISCROSS   VARCHAR2(30)
+)
+tablespace USERS
+  pctfree 10
+  initrans 1
+  maxtrans 255
+  storage
+  (
+    initial 64K
+    next 1M
+    minextents 1
+    maxextents unlimited
+  );
+comment on table SQJZ.CC_XMPP_MSG_CROSSBORDER
+  is '越界记录表';
+comment on column SQJZ.CC_XMPP_MSG_CROSSBORDER.ID
+  is 'ID';
+comment on column SQJZ.CC_XMPP_MSG_CROSSBORDER.FXRY_ID
+  is '人员ID';
+comment on column SQJZ.CC_XMPP_MSG_CROSSBORDER.TIME
+  is '记录时间';
+comment on column SQJZ.CC_XMPP_MSG_CROSSBORDER.LONGITUDE
+  is '经度';
+comment on column SQJZ.CC_XMPP_MSG_CROSSBORDER.LATITUDE
+  is '纬度';
+comment on column SQJZ.CC_XMPP_MSG_CROSSBORDER.ISCROSS
+  is '是否越界';
+alter table SQJZ.CC_XMPP_MSG_CROSSBORDER
+  add constraint PRIM_CC_XMPP_MSG_CROSSB primary key (ID)
+  using index 
+  tablespace USERS
+  pctfree 10
+  initrans 2
+  maxtrans 255
+  storage
+  (
+    initial 64K
+    next 1M
+    minextents 1
+    maxextents unlimited
+  );
+
+
+
+create table SQJZ.CC_XMPP_LBS_REQ
+(
+  ID            VARCHAR2(32) not null,
+  DEVICE_NUMBER VARCHAR2(32),
+  LOC_TIME      DATE,
+  REQ_TIME      DATE,
+  REQ_SEQ       NUMBER,
+  RES_TIME      DATE,
+  RES_CONTENT   VARCHAR2(500)
+)
+tablespace USERS
+  pctfree 10
+  initrans 1
+  maxtrans 255
+  storage
+  (
+    initial 64K
+    next 1M
+    minextents 1
+    maxextents unlimited
+  );
+comment on table SQJZ.CC_XMPP_LBS_REQ
+  is 'LBS定位请求';
+comment on column SQJZ.CC_XMPP_LBS_REQ.DEVICE_NUMBER
+  is '设备编号';
+alter table SQJZ.CC_XMPP_LBS_REQ
+  add constraint PRIMARY_CC_XMPP_LBS_REQ primary key (ID)
+  using index 
+  tablespace USERS
+  pctfree 10
+  initrans 2
+  maxtrans 255
+  storage
+  (
+    initial 64K
+    next 1M
+    minextents 1
+    maxextents unlimited
+  );
+create index SQJZ.DEVICEID_RESTIME on SQJZ.CC_XMPP_LBS_REQ (DEVICE_NUMBER, REQ_TIME)
+  tablespace USERS
+  pctfree 10
+  initrans 2
+  maxtrans 255
+  storage
+  (
+    initial 64K
+    next 1M
+    minextents 1
+    maxextents unlimited
+  );
+
+
+
+create table SQJZ.CC_ALARM_INFO
+(
+  ALARM_ID     VARCHAR2(32) not null,
+  FXRY_ID      VARCHAR2(32),
+  ALARM_TIME   DATE,
+  ALARM_LEVEL  VARCHAR2(5),
+  ALARM_TYPE   VARCHAR2(10),
+  EXECUTE_UNIT VARCHAR2(32),
+  ADJUST_TYPE  VARCHAR2(5),
+  ISAUTO_ALERT NUMBER(38) default 2,
+  ALERT        VARCHAR2(500),
+  ALARM        VARCHAR2(500),
+  HANDLE_TIME  DATE,
+  HANDLER      VARCHAR2(64),
+  RECORD       VARCHAR2(400),
+  STATUS       VARCHAR2(1),
+  SAVE_DATE    DATE default sysdate,
+  X            FLOAT,
+  Y            FLOAT,
+  EVENT_ID     VARCHAR2(32),
+  REPAIR       VARCHAR2(1),
+  CONTENT      VARCHAR2(100)
+)
+tablespace USERS
+  pctfree 10
+  initrans 1
+  maxtrans 255
+  storage
+  (
+    initial 2M
+    next 1M
+    minextents 1
+    maxextents unlimited
+  );
+comment on table SQJZ.CC_ALARM_INFO
+  is '报警信息';
+comment on column SQJZ.CC_ALARM_INFO.ALARM_ID
+  is '报警ID';
+comment on column SQJZ.CC_ALARM_INFO.FXRY_ID
+  is '人员ID';
+comment on column SQJZ.CC_ALARM_INFO.ALARM_TIME
+  is '报警时间';
+comment on column SQJZ.CC_ALARM_INFO.ALARM_LEVEL
+  is '报警级别';
+comment on column SQJZ.CC_ALARM_INFO.ALARM_TYPE
+  is '报警类型';
+comment on column SQJZ.CC_ALARM_INFO.EXECUTE_UNIT
+  is '执行机关';
+comment on column SQJZ.CC_ALARM_INFO.ADJUST_TYPE
+  is '矫正类别';
+comment on column SQJZ.CC_ALARM_INFO.ISAUTO_ALERT
+  is '是否自动提醒';
+comment on column SQJZ.CC_ALARM_INFO.ALERT
+  is '提醒内容';
+comment on column SQJZ.CC_ALARM_INFO.ALARM
+  is '报警内容';
+comment on column SQJZ.CC_ALARM_INFO.HANDLE_TIME
+  is '处理时间';
+comment on column SQJZ.CC_ALARM_INFO.HANDLER
+  is '处理人/方式';
+comment on column SQJZ.CC_ALARM_INFO.RECORD
+  is '记录内容';
+comment on column SQJZ.CC_ALARM_INFO.STATUS
+  is '1.已处理（已完结）;2.未处理（持续中）';
+comment on column SQJZ.CC_ALARM_INFO.X
+  is 'x坐标';
+comment on column SQJZ.CC_ALARM_INFO.Y
+  is 'y坐标';
+comment on column SQJZ.CC_ALARM_INFO.EVENT_ID
+  is '报警事件ID';
+comment on column SQJZ.CC_ALARM_INFO.REPAIR
+  is '是否被修复（定位修复越界和设备不在线） null，未修复；1，修复';
+comment on column SQJZ.CC_ALARM_INFO.CONTENT
+  is '备注内容';
+alter table SQJZ.CC_ALARM_INFO
+  add constraint PK_CC_ALARM_INFO primary key (ALARM_ID)
+  using index 
+  tablespace USERS
+  pctfree 10
+  initrans 2
+  maxtrans 255
+  storage
+  (
+    initial 2M
+    next 1M
+    minextents 1
+    maxextents unlimited
+  );
+
+
+
+
+
+create table SQJZ.CC_LOCATION_INFO
+(
+  LOC_ID     VARCHAR2(32) not null,
+  LOC_TIME   DATE,
+  LONGITUDE  NUMBER(17,9),
+  LATITUDE   NUMBER(17,9),
+  ADDRESS    VARCHAR2(32),
+  DEVICE_ID  VARCHAR2(32),
+  FXRY_ID    VARCHAR2(32),
+  SAVE_DATE  DATE default sysdate,
+  ALARM_TYPE VARCHAR2(32),
+  LOC_TYPE   VARCHAR2(30),
+  IS_REPEAT  VARCHAR2(30),
+  SQJZRYBH   VARCHAR2(32),
+  JZDW       VARCHAR2(32),
+  JZZT       VARCHAR2(32),
+  SFYJ       VARCHAR2(32)
+)
+;
+alter table SQJZ.CC_LOCATION_INFO
+  add constraint PRIMARY_LOCATION_P primary key (LOC_ID)
+  using index 
+  tablespace USERS
+  pctfree 10
+  initrans 2
+  maxtrans 255
+  storage
+  (
+    initial 64K
+    next 1M
+    minextents 1
+    maxextents unlimited
+  );
+create index SQJZ.FXRY_LOCATION_P on SQJZ.CC_LOCATION_INFO (FXRY_ID)
+  tablespace USERS
+  pctfree 10
+  initrans 2
+  maxtrans 255
+  storage
+  (
+    initial 64K
+    next 1M
+    minextents 1
+    maxextents unlimited
+  )
+  compress;
+create index SQJZ.TIME_FXRY_LOCATION_P on SQJZ.CC_LOCATION_INFO (LOC_TIME, FXRY_ID);
+create index SQJZ.TIME_LOCATION_P on SQJZ.CC_LOCATION_INFO (LOC_TIME)
+  tablespace USERS
+  pctfree 10
+  initrans 2
+  maxtrans 255
+  storage
+  (
+    initial 64K
+    next 1M
+    minextents 1
+    maxextents unlimited
+  )
+  compress;
+
+
+
+
+
+create table SQJZ.CC_LOCATION_INFO_BUFFER
+(
+  LOC_ID     VARCHAR2(32) not null,
+  LOC_TIME   DATE,
+  LONGITUDE  NUMBER(17,9),
+  LATITUDE   NUMBER(17,9),
+  ADDRESS    VARCHAR2(32),
+  DEVICE_ID  VARCHAR2(32),
+  FXRY_ID    VARCHAR2(32),
+  SAVE_DATE  DATE default sysdate,
+  ALARM_TYPE VARCHAR2(32),
+  LOC_TYPE   VARCHAR2(30),
+  IS_REPEAT  VARCHAR2(30),
+  SQJZRYBH   VARCHAR2(32),
+  JZDW       VARCHAR2(32),
+  JZZT       VARCHAR2(32),
+  SFYJ       VARCHAR2(32)
+)
+partition by hash (FXRY_ID)
+(
+  partition SYS_P9749
+    tablespace USERS,
+  partition SYS_P9750
+    tablespace USERS,
+  partition SYS_P9751
+    tablespace USERS,
+  partition SYS_P9752
+    tablespace USERS,
+  partition SYS_P9753
+    tablespace USERS,
+  partition SYS_P9754
+    tablespace USERS,
+  partition SYS_P9755
+    tablespace USERS,
+  partition SYS_P9756
+    tablespace USERS,
+  partition SYS_P9757
+    tablespace USERS,
+  partition SYS_P9758
+    tablespace USERS,
+  partition SYS_P9759
+    tablespace USERS,
+  partition SYS_P9760
+    tablespace USERS,
+  partition SYS_P9761
+    tablespace USERS,
+  partition SYS_P9762
+    tablespace USERS,
+  partition SYS_P9763
+    tablespace USERS,
+  partition SYS_P9764
+    tablespace USERS,
+  partition SYS_P9765
+    tablespace USERS,
+  partition SYS_P9766
+    tablespace USERS,
+  partition SYS_P9767
+    tablespace USERS,
+  partition SYS_P9768
+    tablespace USERS,
+  partition SYS_P9769
+    tablespace USERS,
+  partition SYS_P9770
+    tablespace USERS,
+  partition SYS_P9771
+    tablespace USERS,
+  partition SYS_P9772
+    tablespace USERS,
+  partition SYS_P9773
+    tablespace USERS,
+  partition SYS_P9774
+    tablespace USERS,
+  partition SYS_P9775
+    tablespace USERS,
+  partition SYS_P9776
+    tablespace USERS,
+  partition SYS_P9777
+    tablespace USERS,
+  partition SYS_P9778
+    tablespace USERS,
+  partition SYS_P9779
+    tablespace USERS,
+  partition SYS_P9780
+    tablespace USERS,
+  partition SYS_P9781
+    tablespace USERS,
+  partition SYS_P9782
+    tablespace USERS,
+  partition SYS_P9783
+    tablespace USERS,
+  partition SYS_P9784
+    tablespace USERS,
+  partition SYS_P9785
+    tablespace USERS,
+  partition SYS_P9786
+    tablespace USERS,
+  partition SYS_P9787
+    tablespace USERS,
+  partition SYS_P9788
+    tablespace USERS,
+  partition SYS_P9789
+    tablespace USERS,
+  partition SYS_P9790
+    tablespace USERS,
+  partition SYS_P9791
+    tablespace USERS,
+  partition SYS_P9792
+    tablespace USERS,
+  partition SYS_P9793
+    tablespace USERS,
+  partition SYS_P9794
+    tablespace USERS,
+  partition SYS_P9795
+    tablespace USERS,
+  partition SYS_P9796
+    tablespace USERS,
+  partition SYS_P9797
+    tablespace USERS,
+  partition SYS_P9798
+    tablespace USERS,
+  partition SYS_P9799
+    tablespace USERS,
+  partition SYS_P9800
+    tablespace USERS,
+  partition SYS_P9801
+    tablespace USERS,
+  partition SYS_P9802
+    tablespace USERS,
+  partition SYS_P9803
+    tablespace USERS,
+  partition SYS_P9804
+    tablespace USERS,
+  partition SYS_P9805
+    tablespace USERS,
+  partition SYS_P9806
+    tablespace USERS,
+  partition SYS_P9807
+    tablespace USERS,
+  partition SYS_P9808
+    tablespace USERS,
+  partition SYS_P9809
+    tablespace USERS,
+  partition SYS_P9810
+    tablespace USERS,
+  partition SYS_P9811
+    tablespace USERS,
+  partition SYS_P9812
+    tablespace USERS
+);
+alter table SQJZ.CC_LOCATION_INFO_BUFFER
+  add constraint PRIMARY_LOCATION_B primary key (LOC_ID)
+  using index 
+  tablespace USERS
+  pctfree 10
+  initrans 2
+  maxtrans 255
+  storage
+  (
+    initial 64K
+    next 1M
+    minextents 1
+    maxextents unlimited
+  );
+create index SQJZ.FXRY_LOCATION_B on SQJZ.CC_LOCATION_INFO_BUFFER (FXRY_ID)
+  tablespace USERS
+  pctfree 10
+  initrans 2
+  maxtrans 255
+  storage
+  (
+    initial 64K
+    next 1M
+    minextents 1
+    maxextents unlimited
+  )
+  compress;
+create index SQJZ.TIME_FXRY_LOCATION_B on SQJZ.CC_LOCATION_INFO_BUFFER (LOC_TIME, FXRY_ID);
+create index SQJZ.TIME_LOCATION_B on SQJZ.CC_LOCATION_INFO_BUFFER (LOC_TIME)
+  tablespace USERS
+  pctfree 10
+  initrans 2
+  maxtrans 255
+  storage
+  (
+    initial 64K
+    next 1M
+    minextents 1
+    maxextents unlimited
+  )
+  compress;
+
+
+
+
+
+
+
+
+
+
+create table SQJZ.CC_XMPP_LOG
+(
+  ID            VARCHAR2(32) not null,
+  DEVICE_NUMBER VARCHAR2(32),
+  MSG_TYPE      VARCHAR2(32),
+  MSG_TIME      TIMESTAMP(6),
+  TYPE          VARCHAR2(32),
+  MSG_ID        VARCHAR2(60),
+  MESSAGE       VARCHAR2(2000)
+)
+tablespace USERS
+  pctfree 10
+  initrans 1
+  maxtrans 255
+  storage
+  (
+    initial 64K
+    next 1M
+    minextents 1
+    maxextents unlimited
+  );
+comment on column SQJZ.CC_XMPP_LOG.ID
+  is '主键';
+comment on column SQJZ.CC_XMPP_LOG.DEVICE_NUMBER
+  is '设备编号';
+comment on column SQJZ.CC_XMPP_LOG.MSG_TYPE
+  is '消息类型(set,get,error)';
+comment on column SQJZ.CC_XMPP_LOG.MSG_TIME
+  is '消息时间';
+comment on column SQJZ.CC_XMPP_LOG.TYPE
+  is '协议类型(loc,alert)';
+comment on column SQJZ.CC_XMPP_LOG.MSG_ID
+  is '消息ID';
+alter table SQJZ.CC_XMPP_LOG
+  add constraint PRIMARY_CC_XMPP_LOG primary key (ID)
+  using index 
+  tablespace USERS
+  pctfree 10
+  initrans 2
+  maxtrans 255
+  storage
+  (
+    initial 64K
+    next 1M
+    minextents 1
+    maxextents unlimited
+  );
+create index SQJZ.DN_CC_XMPP_LOG on SQJZ.CC_XMPP_LOG (DEVICE_NUMBER)
+  tablespace USERS
+  pctfree 10
+  initrans 2
+  maxtrans 255
+  storage
+  (
+    initial 64K
+    next 1M
+    minextents 1
+    maxextents unlimited
+  );
+create index SQJZ.MT_CC_XMPP_LOG on SQJZ.CC_XMPP_LOG (MSG_TIME)
+  tablespace USERS
+  pctfree 10
+  initrans 2
+  maxtrans 255
+  storage
+  (
+    initial 64K
+    next 1M
+    minextents 1
+    maxextents unlimited
+  );
+
+
+
+
+
+create table SQJZ.CC_XMPP_DEVICE_STATUS
+(
+  ID            VARCHAR2(32) not null,
+  FXRY_ID       VARCHAR2(32),
+  DEVICE_ID     VARCHAR2(32),
+  DEVICE_NUMBER VARCHAR2(32),
+  POWER         VARCHAR2(32),
+  SILENT_STATE  VARCHAR2(30),
+  CLOSE_STATE   VARCHAR2(30),
+  RECEIVE_TIME  DATE,
+  SAVE_TIME     DATE default sysdate
+)
+tablespace USERS
+  pctfree 10
+  initrans 1
+  maxtrans 255
+  storage
+  (
+    initial 64K
+    next 1M
+    minextents 1
+    maxextents unlimited
+  );
+alter table SQJZ.CC_XMPP_DEVICE_STATUS
+  add constraint CC_XMPP_DEVICE_STATUS_ID primary key (ID)
+  using index 
+  tablespace USERS
+  pctfree 10
+  initrans 2
+  maxtrans 255
+  storage
+  (
+    initial 64K
+    next 1M
+    minextents 1
+    maxextents unlimited
+  );
+
+
+
+create table SQJZ.CC_LOGS
+(
+  ID    FLOAT not null,
+  YHM   VARCHAR2(4000),
+  MKM   VARCHAR2(4000),
+  RZLX  NUMBER(10),
+  CZSJ  DATE,
+  ORGID VARCHAR2(32)
+)
+tablespace USERS
+  pctfree 10
+  initrans 1
+  maxtrans 255
+  storage
+  (
+    initial 3M
+    next 1M
+    minextents 1
+    maxextents unlimited
+  );
+alter table SQJZ.CC_LOGS
+  add constraint CC_LOGS_PK primary key (ID)
+  using index 
+  tablespace USERS
+  pctfree 10
+  initrans 2
+  maxtrans 255
+  storage
+  (
+    initial 576K
+    next 1M
+    minextents 1
+    maxextents unlimited
+  );
+
+

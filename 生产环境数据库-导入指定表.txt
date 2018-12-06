@@ -1,0 +1,7 @@
+生产环境数据库-导入指定表：
+
+impdp sqjz/sqjz@10.204.0.6:1521/commdb directory=SQJZDMP2 dumpfile=sqjz_181122.dmp include=table:\"in \(\'CC_FXRY_BASEINFO\',\'CC_LEGAL_INSTRUMENT\',\'CC_EXECUTE_INFO\',\'CC_REMOVE_ADJUST\'\)\"
+
+
+
+
