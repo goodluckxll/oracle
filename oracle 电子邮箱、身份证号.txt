@@ -1,0 +1,6 @@
+--µÁ◊”” œ‰(±ÿÃÓ)
+select * from cc_person_sfxzgzry t where t.rybm in (select f.rybm from cc_person_sfxzgzry f where regexp_substr(f.dzyx, '[[:alnum:]](([_\.\-\+]?[[:alnum:]]+)*)@' ||
+ '([[:alnum:]]+)(([\.-]?[[:alnum:]]+)*)\.([[:alpha:]]{2,})') is null ) order by t.ssjg asc;
+
+
+select * from cc_person_sfxzgzry t where (test_sfzh(t.sfzh)='0'  or t.sfzh is null )order by t.sjlysf asc ;
