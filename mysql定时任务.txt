@@ -1,0 +1,67 @@
+now()返回日期和时间
+curdate()返回日期
+REPLACE(UUID(),'-','') mysql产生uuid
+date_sub(now() ,interval 3 day)) 比当前时间晚3天
+
+
+--mysql 插入另一张表数据
+insert into back_receive_msg_f_wb  (select * from receive_msg_f_wb t where
+t.receive_time<=date_sub(curdate() ,interval 3 day));
+
+--mysql 删除部分表数据
+delete from  receive_msg_f_wb  where receive_time<=date_sub(curdate() ,interval 3 day);
+
+
+-----------------------------------------mysql 创建定时任务--------------------------------
+
+#查看当前是否已开启事件调度器
+show variables like 'event_scheduler';
+
+#要想保证能够执行event事件，就必须保证定时器是开启状态，默认为关闭状态
+set global event_scheduler =1;
+#或者set GLOBAL event_scheduler = ON;
+
+# 选择库
+use tx;
+
+# 如果原来存在该名字的任务计划则先删除
+drop event if exists SetEVToInvalidStatus_AtNight_0100;
+
+delimiter $$
+ # 每天晚上01:00
+create event SetEVToInvalidStatus_AtNight_0100  
+# 测试使用 每天
+on schedule every 1 DAY starts timestamp '2018-02-27 00:00:10'
+do
+begin
+    start transaction;
+    set @timenow=curdate(); #开始事务
+    
+    # 往备份表-接收表中插入3天前的数据
+  	insert into back_receive_msg_f_wb  (select * from receive_msg_f_wb t where
+  t.receive_time<=date_sub(curdate() ,interval 3 day));
+   # 删除接收表表3天前的数据
+  delete from  receive_msg_f_wb  where receive_time<=date_sub(curdate() ,interval 3 day);
+  # 往备份表-发送表中插入3天前的数据
+    insert into back_send_msg_t_wb  (select * from send_msg_t_wb t where
+  t.create_time<=date_sub(curdate() ,interval 3 day));
+   # 删除发送表3天前的数据
+  delete from  send_msg_t_wb  where create_time<=date_sub(curdate() ,interval 3 day);
+  commit;  #提交事务
+
+end  $$
+delimiter ;
+
+
+
+
+# 停止
+ALTER EVENT SetEVToInvalidStatus_AtNight_0100 DISABLE;
+# 开启
+alter event SetEVToInvalidStatus_AtNight_0100 enable;
+
+# 查看状态
+select * from mysql.event；
+
+
+最后通过HeidiSQL，将“设置”-“时间结束之后，删除事件” 不勾选；
