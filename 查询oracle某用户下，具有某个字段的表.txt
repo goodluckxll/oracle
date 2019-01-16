@@ -1,0 +1,5 @@
+select 
+t.DATA_TYPE || '(' || t.DATA_LENGTH || ')' l,
+
+t.* from dba_tab_columns t
+where t.OWNER = 'SQJZ' and t.COLUMN_NAME = 'DEVICE_NUMBER'
